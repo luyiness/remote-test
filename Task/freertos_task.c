@@ -7,6 +7,7 @@
 TaskHandle_t printf_task_handle;
 TaskHandle_t power_task_handle;
 TaskHandle_t communicate_task_handle;
+TaskHandle_t key_task_handle;
 
 void printf_task(void *pvParameters)
 {
@@ -54,6 +55,40 @@ void communicate_task(void *pvParameters)
     }
 }
 
+void key_task(void *pvParameters)
+{
+    uint32_t tick = xTaskGetTickCount();
+    while (1)
+    {
+        KEY_TypeDef key = int_key_scan();
+        switch (key)
+        {
+        case KEY_UP:
+            debug_printfln("key_up");
+            break;
+        case KEY_DOWN:
+            debug_printfln("key_down");
+            break;
+        case KEY_LEFT:
+            debug_printfln("key_left");
+            break;
+        case KEY_RIGHT:
+            debug_printfln("key_right");
+            break;
+        case KEY_LEFT_X:
+            debug_printfln("key_left_x");
+            break;
+        case KEY_RIGHT_X:
+            debug_printfln("key_right_x");
+            break;
+        default:
+            debug_printfln("unknown key");
+            break;
+        }
+        vTaskDelayUntil(&tick, key_task_period);
+    }
+}
+
 void Freertos_start(void)
 {
     xTaskCreate(printf_task, "printf_task", printf_task_stacksize, NULL,
@@ -66,6 +101,10 @@ void Freertos_start(void)
     //communicate
     xTaskCreate(communicate_task, "communicate_task", communicate_task_stacksize, NULL,
         communicate_task_priority, &communicate_task_handle);
+
+    //key
+    xTaskCreate(key_task, "key_task", key_task_stacksize, NULL,
+        key_task_priority, &key_task_handle);
 
     vTaskStartScheduler();
 }

@@ -12,6 +12,7 @@
 #include "ip5305t.h"
 #include "util.h"
 #include "SI24R1.h"
+#include "Int_key.h"
 
 //printf task
 void printf_task(void *pvParameters);
@@ -30,6 +31,12 @@ void communicate_task(void *pvParameters);
 #define communicate_task_priority 4
 #define communicate_task_stacksize 128
 #define communicate_task_period 6
+
+//key task
+void key_task(void *pvParameters);
+#define key_task_priority 4
+#define key_task_stacksize 128
+#define key_task_period 10
 
 void Freertos_start(void);
 

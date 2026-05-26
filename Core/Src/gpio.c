@@ -72,35 +72,6 @@ void MX_GPIO_Init(void)
     HAL_GPIO_Init(POWER_KEY_GPIO_Port, &gpio_init_struct);
     HAL_GPIO_WritePin(POWER_KEY_GPIO_Port, POWER_KEY_Pin, GPIO_PIN_SET);    //初始化=1
 
-    //灯控系统
-    gpio_init_struct.Pin = L1_Pin;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_init_struct.Pull = GPIO_PULLUP;
-    gpio_init_struct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(L1_GPIO_Port, &gpio_init_struct);
-    HAL_GPIO_WritePin(L1_GPIO_Port, L1_Pin, GPIO_PIN_SET);    //初始化=1：就是初始化后灯不亮
-
-    gpio_init_struct.Pin = L2_Pin;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_init_struct.Pull = GPIO_PULLUP;
-    gpio_init_struct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(L2_GPIO_Port, &gpio_init_struct);
-    HAL_GPIO_WritePin(L2_GPIO_Port, L2_Pin, GPIO_PIN_SET);
-
-    gpio_init_struct.Pin = L3_Pin;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_init_struct.Pull = GPIO_PULLUP;
-    gpio_init_struct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(L3_GPIO_Port, &gpio_init_struct);
-    HAL_GPIO_WritePin(L3_GPIO_Port, L3_Pin, GPIO_PIN_SET);
-
-    gpio_init_struct.Pin = L4_Pin;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio_init_struct.Pull = GPIO_PULLUP;
-    gpio_init_struct.Speed = GPIO_SPEED_LOW;
-    HAL_GPIO_Init(L4_GPIO_Port, &gpio_init_struct);
-    HAL_GPIO_WritePin(L4_GPIO_Port, L4_Pin, GPIO_PIN_SET);
-
     //SI24R1：PA8——EN使能，PA4——NSS片选
     gpio_init_struct.Pin = SI24R1_CE_Pin;
     gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -115,6 +86,19 @@ void MX_GPIO_Init(void)
     gpio_init_struct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(SI24R1_NSS_GPIO_Port, &gpio_init_struct);
     HAL_GPIO_WritePin(SI24R1_NSS_GPIO_Port, SI24R1_NSS_Pin, GPIO_PIN_SET);  //NSS初始=1 不片选
+
+    //remote 按键
+    /*Configure GPIO pins : KEY_LEFT_X_Pin KEY_RIGHT_X_Pin KEY_DOWN_Pin */
+    gpio_init_struct.Pin = KEY_LEFT_X_Pin|KEY_RIGHT_X_Pin|KEY_DOWN_Pin;
+    gpio_init_struct.Mode = GPIO_MODE_INPUT;
+    gpio_init_struct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOB, &gpio_init_struct);
+
+    /*Configure GPIO pins : KEY_UP_Pin KEY_RIGHT_Pin KEY_LEFT_Pin */
+    gpio_init_struct.Pin = KEY_UP_Pin|KEY_RIGHT_Pin|KEY_LEFT_Pin;
+    gpio_init_struct.Mode = GPIO_MODE_INPUT;
+    gpio_init_struct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOB, &gpio_init_struct);
 }
 
 /* USER CODE BEGIN 2 */
