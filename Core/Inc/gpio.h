@@ -48,7 +48,7 @@ void MX_GPIO_Init(void);
 #define LED1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)             /* PE口时钟使能 */
 
 //PB2： 5305T定时唤醒
-#define POWER_KEY_Pin   GPIO_PIN_2
+#define POWER_KEY_Pin   GPIO_PIN_15
 #define POWER_KEY_GPIO_Port   GPIOB
 
 //灯控系统
@@ -64,10 +64,10 @@ void MX_GPIO_Init(void);
 #define L4_Pin   GPIO_PIN_14
 #define L4_GPIO_Port   GPIOB
 
-#define SI24R1_CE_Pin   GPIO_PIN_8        //对应SI24R1的CE引脚
-#define SI24R1_CE_GPIO_Port   GPIOA
+#define SI24R1_CE_Pin   GPIO_PIN_7        //对应SI24R1的CE引脚
+#define SI24R1_CE_GPIO_Port   GPIOB
 
-#define SI24R1_NSS_Pin   GPIO_PIN_4
+#define SI24R1_NSS_Pin   GPIO_PIN_15
 #define SI24R1_NSS_GPIO_Port   GPIOA
 
 /******************************************************************************************/

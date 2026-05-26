@@ -12,7 +12,7 @@ static uint8_t SPI_RW(uint8_t byte)
 {
 	uint8_t result = 0;
 	taskENTER_CRITICAL();	//进入临界区
-	HAL_SPI_TransmitReceive(&hspi1, &byte, &result, 1, 1000);
+	HAL_SPI_TransmitReceive(&hspi3, &byte, &result, 1, 1000);
 	taskEXIT_CRITICAL();	//
 	return (result);
 }

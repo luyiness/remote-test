@@ -9,7 +9,7 @@ set(ArmGNUToolchain /Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi)
 set(CMAKE_C_COMPILER   ${ArmGNUToolchain}/bin/arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER ${ArmGNUToolchain}/bin/arm-none-eabi-g++)
 set(CMAKE_ASM_COMPILER ${ArmGNUToolchain}/bin/arm-none-eabi-gcc)
-#include_directories(${ArmGNUToolchain}/arm-none-eabi/include)      //建�??删掉。不要手动加�? gcc �?己会找。你手动加，反而可能：找错 multilib,找到 ARM mode libc,导致 Thumb/ARM mismatch
+#include_directories(${ArmGNUToolchain}/arm-none-eabi/include)      //建�??删掉。不要手动加�? gcc �?己会找。你手动加，反而可能：找错 multilib,找到 ARM mode libc,导致 Thumb/ARM mismatch
 #link_directories(${ArmGNUToolchain}/arm-none-eabi/lib)
 #
 # This file is generated only once,
@@ -65,7 +65,7 @@ add_link_options(
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
 
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".elf")   #生成物加�?.elf后缀
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".elf")
 
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
         -mcpu=cortex-m3
