@@ -34,9 +34,22 @@ void communicate_task(void *pvParameters)
 {
     Int_SI24R1_Init();
     uint32_t tick = xTaskGetTickCount();
+
+    uint8_t tx_buff[32] = {0};      //发送数据的数组
+    //测试：
+    tx_buff[0] = 'h';
+    tx_buff[1] = 'e';
+    tx_buff[2] = 'l';
+    tx_buff[3] = 'l';
+    tx_buff[4] = 'o';
+
     while (1)
     {
-        
+        uint8_t result =  Int_SI24R1_TxPacket(tx_buff);
+        if (result == 0)
+        {
+            debug_printfln("success");
+        }
         vTaskDelayUntil(&tick, communicate_task_period);
     }
 }

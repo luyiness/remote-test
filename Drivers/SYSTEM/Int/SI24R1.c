@@ -134,7 +134,7 @@ uint8_t Int_SI24R1_TxPacket(uint8_t *txbuf)
 	// 	;						// 等待发送完成；没用中断 所以注掉，用下面的while()
 
 	//等待中断标志，直到发送成功或失败：也就是TX_DS=1或MAX_RT=1
-	while (state & (TX_DS | MAX_RT))
+	while ((state & (TX_DS | MAX_RT)) == 0)
 	{
 		state = Int_SI24R1_Read_Byte(STATUS); // 读状态寄存器
 	}
@@ -182,6 +182,6 @@ void Int_SI24R1_Init(void)
 	}
 	debug_printfln("spi初始化成功");
 
-	//4、进入RX mode
-	Int_SI24R1_RX_Mode();
+	//4、进入TX mode
+	Int_SI24R1_TX_Mode();
 }
