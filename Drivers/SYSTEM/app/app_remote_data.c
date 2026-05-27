@@ -4,7 +4,7 @@
 
 #include "app_remote_data.h"
 
-int16_t joystick_digitalValue_bias[4] = {0};       //存储偏移值，可能为负数
+int16_t joystick_dv_bias[4] = {0};       //digital value bias 存储偏移值，可能为负数
 uint8_t COLLECT_COUNT = 50;     //共采集COLLECT_COUNT次。 注意每次采集时间是joystick task的延迟时间
 
 //摇杆校准：就是将这些摇杆的数字量digital value修改成理想的值
@@ -20,10 +20,10 @@ static void App_Calibrate_Joystick_Data(Remote_Data *remote_data)
         sum[3] += remote_data->roll - 500;
         vTaskDelay(10);         //延迟每次采集时间
     }
-    joystick_digitalValue_bias[0] = sum[0] / COLLECT_COUNT;
-    joystick_digitalValue_bias[1] = sum[1] / COLLECT_COUNT;
-    joystick_digitalValue_bias[2] = sum[2] / COLLECT_COUNT;
-    joystick_digitalValue_bias[3] = sum[3] / COLLECT_COUNT;
+    joystick_dv_bias[0] += sum[0] / COLLECT_COUNT;     //为什么是+=而不是= ：第一次校准没问题。第二次执行校准时，joystick_dv_bias[0]就=0了，不就把原先的校准值清除了 和没校准时一样了
+    joystick_dv_bias[1] += sum[1] / COLLECT_COUNT;
+    joystick_dv_bias[2] += sum[2] / COLLECT_COUNT;
+    joystick_dv_bias[3] += sum[3] / COLLECT_COUNT;
 }
 
 void App_Process_Joystick_Data(Remote_Data *remote_data)
@@ -38,17 +38,17 @@ void App_Process_Joystick_Data(Remote_Data *remote_data)
     remote_data->pitch = 1000 - remote_data->pitch * 1000 / 4095;
     remote_data->roll = 1000 - remote_data->roll * 1000 / 4095;
 
-    //校准；   （这里和老师的代码不一样，具体看onenote笔记）
-    int16_t throttle = remote_data->throttle - joystick_digitalValue_bias[0];
-    int16_t yaw = remote_data->yaw - joystick_digitalValue_bias[1];
-    int16_t pitch = remote_data->pitch - joystick_digitalValue_bias[2];
-    int16_t roll = remote_data->roll - joystick_digitalValue_bias[3];
+    //校准；
+    remote_data->throttle -= joystick_dv_bias[0];
+    remote_data->yaw -= joystick_dv_bias[1];
+    remote_data->pitch -= joystick_dv_bias[2];
+    remote_data->roll -= joystick_dv_bias[3];
 
     //重新限定范围；（因为前面的校准只是减一个数，有可能成负数 是不允许的）
-    throttle = LIMIT(throttle, 0, 1000);
-    yaw = LIMIT(yaw, 0, 1000);
-    pitch = LIMIT(pitch, 0, 1000);
-    roll = LIMIT(roll, 0, 1000);
+    int16_t throttle = LIMIT(remote_data->throttle, 0, 1000);
+    int16_t yaw = LIMIT(remote_data->yaw, 0, 1000);
+    int16_t pitch = LIMIT(remote_data->pitch, 0, 1000);
+    int16_t roll = LIMIT(remote_data->roll, 0, 1000);
 
     taskEXIT_CRITICAL();
 
@@ -63,18 +63,17 @@ void App_Process_Key_Data(Remote_Data *remote_data)
     KEY_TypeDef key = int_key_scan();
     switch (key)
     {
-    case KEY_UP:
-        debug_printfln("key_up");
-        remote_data->pitch += 10;
+    case KEY_UP:            //throttle偏移+10
+        joystick_dv_bias[2] -= 10;        //偏移量-10，实际的remote_data->throttle就是+10
         break;
     case KEY_DOWN:
-        debug_printfln("key_down");
+        joystick_dv_bias[2] += 10;
         break;
     case KEY_LEFT:
-        debug_printfln("key_left");
+        joystick_dv_bias[3] += 10;
         break;
     case KEY_RIGHT:
-        debug_printfln("key_right");
+        joystick_dv_bias[3] -= 10;
         break;
     case KEY_LEFT_X:        //关机
         debug_printfln("key_left_x");
