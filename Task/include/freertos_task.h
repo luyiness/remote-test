@@ -13,6 +13,7 @@
 #include "util.h"
 #include "SI24R1.h"
 #include "Int_key.h"
+#include "app_remote_data.h"
 
 //printf task
 void printf_task(void *pvParameters);
