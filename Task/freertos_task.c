@@ -63,7 +63,7 @@ void key_task(void *pvParameters)
     uint32_t tick = xTaskGetTickCount();
     while (1)
     {
-        App_Process_Remote_Data(&remote_data);
+        App_Process_Key_Data(&remote_data);
         vTaskDelayUntil(&tick, key_task_period);
     }
 }

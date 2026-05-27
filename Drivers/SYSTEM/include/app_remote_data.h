@@ -9,8 +9,10 @@
 #include "Com_debug.h"
 #include "Int_joystick.h"
 
-void App_Process_Remote_Data(Remote_Data *remote_data);
+void App_Process_Key_Data(Remote_Data *remote_data);
 
 void App_Process_Joystick_Data(Remote_Data *remote_data);
+
+#define LIMIT(x,min,max) (x < min ? min : (x > max ? max : x))
 
 #endif //REMOTE_TEST_APP_REMOTE_DATA_H
