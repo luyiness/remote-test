@@ -14,6 +14,7 @@
 #include "SI24R1.h"
 #include "Int_key.h"
 #include "app_remote_data.h"
+#include "Int_joystick.h"
 
 //printf task
 void printf_task(void *pvParameters);
@@ -38,6 +39,12 @@ void key_task(void *pvParameters);
 #define key_task_priority 4
 #define key_task_stacksize 128
 #define key_task_period 10
+
+//joystick task
+void joystick_task(void *pvParameters);
+#define joystick_task_priority 4
+#define joystick_task_stacksize 128
+#define joystick_task_period 10
 
 void Freertos_start(void);
 

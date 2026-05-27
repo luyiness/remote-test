@@ -41,3 +41,13 @@ void App_Process_Remote_Data(Remote_Data *remote_data)
         break;
     }
 }
+
+void App_Process_Joystick_Data(Remote_Data *remote_data)
+{
+    Int_joystick_scan(remote_data);
+
+    debug_printf("remote_data->pitch: %d", remote_data->pitch);
+    debug_printf("remote_data->throttle: %d", remote_data->throttle);
+    debug_printf("remote_data->fix_height: %d", remote_data->fix_height);
+    //....
+}

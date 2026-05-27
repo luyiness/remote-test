@@ -8,6 +8,7 @@ TaskHandle_t printf_task_handle;
 TaskHandle_t power_task_handle;
 TaskHandle_t communicate_task_handle;
 TaskHandle_t key_task_handle;
+TaskHandle_t joystick_task_handle;
 
 Remote_Data remote_data  = {0};
 
@@ -67,6 +68,17 @@ void key_task(void *pvParameters)
     }
 }
 
+void joystick_task(void *pvParameters)
+{
+    Int_joystick_init();
+    uint32_t tick = xTaskGetTickCount();
+    while (1)
+    {
+        App_Process_Joystick_Data(&remote_data);
+        vTaskDelayUntil(&tick, joystick_task_period);
+    }
+}
+
 void Freertos_start(void)
 {
     xTaskCreate(printf_task, "printf_task", printf_task_stacksize, NULL,
@@ -83,6 +95,10 @@ void Freertos_start(void)
     //key
     xTaskCreate(key_task, "key_task", key_task_stacksize, NULL,
         key_task_priority, &key_task_handle);
+
+    //joystick
+    xTaskCreate(joystick_task, "joystick_task", joystick_task_stacksize, NULL,
+        joystick_task_priority, &joystick_task_handle);
 
     vTaskStartScheduler();
 }

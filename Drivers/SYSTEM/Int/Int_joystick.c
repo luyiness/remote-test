@@ -2,13 +2,16 @@
 // Created by luyi on 2026/5/27.
 //
 
-#include "../include/Int_joystick.h"
+#include "Int_joystick.h"
 
 uint16_t joystick_buff[4] = {0};     //DMA传过来的数据是HalfWord长度、也就是16位，2个摇杆对应4个数字量
 
 
 void Int_joystick_init(void)
 {
+    //ADC校验； 自动的
+    HAL_ADCEx_Calibration_Start(&hadc1);
+
     //启动ADC
     HAL_ADC_Start_DMA(&hadc1, (uint32_t *)joystick_buff, 4);
 }
@@ -21,8 +24,8 @@ void Int_joystick_scan(Remote_Data *remote_data)
     //ADC1-6, rank2   yaw       PA6
     //ADC1-2, rank3   pitch     PA2
     //ADC1-3, rank4   roll      PA3
-    remote_data->throttle = joystick_buff[0];
-    remote_data->yaw = joystick_buff[1];
-    remote_data->pitch = joystick_buff[2];
-    remote_data->roll = joystick_buff[3];
+    remote_data->throttle = (int16_t)joystick_buff[0];
+    remote_data->yaw = (int16_t)joystick_buff[1];
+    remote_data->pitch = (int16_t)joystick_buff[2];
+    remote_data->roll = (int16_t)joystick_buff[3];
 }
