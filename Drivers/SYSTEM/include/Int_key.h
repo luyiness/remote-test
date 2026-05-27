@@ -16,8 +16,10 @@ typedef enum
     KEY_DOWN,
     KEY_LEFT,
     KEY_RIGHT,
-    KEY_LEFT_X,
-    KEY_RIGHT_X,
+    KEY_LEFT_X,     //左上按键
+    KEY_RIGHT_X,    //右上按键
+    KEY_LEFT_X_HOLD,     //左上按键长按
+    KEY_RIGHT_X_HOLD,    //右上按键长按
 }KEY_TypeDef;
 
 #define READ_KEY_LEFT (HAL_GPIO_ReadPin(KEY_LEFT_GPIO_Port, KEY_LEFT_Pin))

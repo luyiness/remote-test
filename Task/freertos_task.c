@@ -81,6 +81,12 @@ void key_task(void *pvParameters)
         case KEY_RIGHT_X:
             debug_printfln("key_right_x");
             break;
+        case KEY_LEFT_X_HOLD:
+            debug_printfln("key_left_x_hold");
+            break;
+        case KEY_RIGHT_X_HOLD:
+            debug_printfln("key_right_x_hold");
+            break;
         default:
             debug_printfln("unknown key");
             break;
