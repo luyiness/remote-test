@@ -15,6 +15,7 @@
 #include "Int_key.h"
 #include "app_remote_data.h"
 #include "Int_joystick.h"
+#include "app_communication.h"
 
 //printf task
 void printf_task(void *pvParameters);

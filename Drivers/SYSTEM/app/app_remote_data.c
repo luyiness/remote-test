@@ -5,19 +5,19 @@
 #include "app_remote_data.h"
 
 int16_t joystick_dv_bias[4] = {0};       //digital value bias 存储偏移值，可能为负数
-uint8_t COLLECT_COUNT = 50;     //共采集COLLECT_COUNT次。 注意每次采集时间是joystick task的延迟时间
+const uint8_t COLLECT_COUNT = 50;     //共采集COLLECT_COUNT次。 注意每次采集时间是joystick task的延迟时间
 
 //摇杆校准：就是将这些摇杆的数字量digital value修改成理想的值
-static void App_Calibrate_Joystick_Data(Remote_Data *remote_data)
+static void App_Calibrate_Joystick_Data(Remote_Data *rd)
 {
     //求每个摇杆的数字量的偏移的平均值
     int16_t sum[4] = {0};
     for (int i = 0; i < COLLECT_COUNT; i++)
     {
-        sum[0] += remote_data->throttle - 0;
-        sum[1] += remote_data->yaw - 500;
-        sum[2] += remote_data->pitch - 500;
-        sum[3] += remote_data->roll - 500;
+        sum[0] += rd->throttle - 0;
+        sum[1] += rd->yaw - 500;
+        sum[2] += rd->pitch - 500;
+        sum[3] += rd->roll - 500;
         vTaskDelay(10);         //延迟每次采集时间
     }
     joystick_dv_bias[0] += sum[0] / COLLECT_COUNT;     //为什么是+=而不是= ：第一次校准没问题。第二次执行校准时，joystick_dv_bias[0]就=0了，不就把原先的校准值清除了 和没校准时一样了
@@ -26,29 +26,29 @@ static void App_Calibrate_Joystick_Data(Remote_Data *remote_data)
     joystick_dv_bias[3] += sum[3] / COLLECT_COUNT;
 }
 
-void App_Process_Joystick_Data(Remote_Data *remote_data)
+void App_Process_Joystick_Data(Remote_Data *rd)
 {
     taskENTER_CRITICAL();
 
-    Int_joystick_scan(remote_data);
+    Int_joystick_scan(rd);
 
     //拿到的数字量digital value，范围改成0～1000， 并改极性（因为尚硅谷的这块板子摇杆pcb的3.3v接反了，比如油门拉到最小是=4095，所以要改极性）
-    remote_data->throttle = 1000 - remote_data->throttle * 1000 / 4095;
-    remote_data->yaw = 1000 - remote_data->yaw * 1000 / 4095;
-    remote_data->pitch = 1000 - remote_data->pitch * 1000 / 4095;
-    remote_data->roll = 1000 - remote_data->roll * 1000 / 4095;
+    rd->throttle = 1000 - rd->throttle * 1000 / 4095;
+    rd->yaw = 1000 - rd->yaw * 1000 / 4095;
+    rd->pitch = 1000 - rd->pitch * 1000 / 4095;
+    rd->roll = 1000 - rd->roll * 1000 / 4095;
 
     //校准；
-    remote_data->throttle -= joystick_dv_bias[0];
-    remote_data->yaw -= joystick_dv_bias[1];
-    remote_data->pitch -= joystick_dv_bias[2];
-    remote_data->roll -= joystick_dv_bias[3];
+    rd->throttle -= joystick_dv_bias[0];
+    rd->yaw -= joystick_dv_bias[1];
+    rd->pitch -= joystick_dv_bias[2];
+    rd->roll -= joystick_dv_bias[3];
 
     //重新限定范围；（因为前面的校准只是减一个数，有可能成负数 是不允许的）
-    int16_t throttle = LIMIT(remote_data->throttle, 0, 1000);
-    int16_t yaw = LIMIT(remote_data->yaw, 0, 1000);
-    int16_t pitch = LIMIT(remote_data->pitch, 0, 1000);
-    int16_t roll = LIMIT(remote_data->roll, 0, 1000);
+    rd->throttle = LIMIT(rd->throttle, 0, 1000);
+    rd->yaw = LIMIT(rd->yaw, 0, 1000);
+    rd->pitch = LIMIT(rd->pitch, 0, 1000);
+    rd->roll = LIMIT(rd->roll, 0, 1000);
 
     taskEXIT_CRITICAL();
 

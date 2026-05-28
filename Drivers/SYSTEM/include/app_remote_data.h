@@ -11,7 +11,7 @@
 
 void App_Process_Key_Data(Remote_Data *remote_data);
 
-void App_Process_Joystick_Data(Remote_Data *remote_data);
+void App_Process_Joystick_Data(Remote_Data *rd);
 
 #define LIMIT(x,min,max) (x < min ? min : (x > max ? max : x))
 
