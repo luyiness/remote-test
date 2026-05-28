@@ -77,11 +77,11 @@ void App_Process_Key_Data(Remote_Data *remote_data)
         break;
     case KEY_LEFT_X:        //关机
         debug_printfln("key_left_x");
-        remote_data->shut = 1;
+        remote_data->shut = 1;              //平常=0，=1表示关机
         break;
     case KEY_RIGHT_X:       //定高
         debug_printfln("key_right_x");
-        remote_data->fix_height = 1;
+        remote_data->fix_height = 1;         //平常=0，=1表示切换成定高/不定高
         break;
     case KEY_LEFT_X_HOLD:
         debug_printfln("key_left_x_hold");

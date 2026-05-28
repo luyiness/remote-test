@@ -23,8 +23,17 @@ void app_comm_send_data(Remote_Data *rd)
     tx_data_buff[8] = rd->pitch >> 8;
     tx_data_buff[9] = rd->roll;
     tx_data_buff[10] = rd->roll >> 8;
+
+
+    taskENTER_CRITICAL();
     tx_data_buff[11] = rd->fix_height;
     tx_data_buff[12] = rd->shut;
+
+    //因为fix_height和shut是按键控制的，每次扫描到此按键后就赋=1。 所以这里发送完数据后、要将fix_height和shut初始化=0，不然就一直=1了
+    //为什么加临界区：比如就此行发生了任务切换 按键扫描使rd->fix_height=1了，那这个1就发不出去了 下面直接清零了
+    rd->fix_height=0;
+    rd->shut=0;
+    taskEXIT_CRITICAL();
 
     //3、尾部校验字段：检测数据完整性 ；4Byte
     check_sum = 0;
