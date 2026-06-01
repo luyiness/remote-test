@@ -16,6 +16,7 @@
 #include "app_remote_data.h"
 #include "Int_joystick.h"
 #include "app_communication.h"
+#include "App_Display.h"
 
 //printf task
 void printf_task(void *pvParameters);
@@ -46,6 +47,12 @@ void joystick_task(void *pvParameters);
 #define joystick_task_priority 4
 #define joystick_task_stacksize 128
 #define joystick_task_period 10
+
+//display task
+void display_task(void *pvParameters);
+#define display_task_priority 2
+#define display_task_stacksize 128
+#define display_task_period 10
 
 void Freertos_start(void);
 
